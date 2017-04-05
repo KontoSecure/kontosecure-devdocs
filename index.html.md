@@ -86,7 +86,7 @@ $response = $client->createOrder($order);
 {
   "order_id": "84I00-40K7E-65E6S-DXJ75",
   "security_token": "e4R75Wv8",
-  "checkout_url": "//www.konto-secure.de/checkout/84I00-40K7E-65E6S-DXJ75/13fd3d881bbbd55c5cab9ebeea0fdf7b91e9bb9c7d7af8563cd95d51fb060a19"
+  "checkout_url": "https://www.konto-secure.de/checkout/84I00-40K7E-65E6S-DXJ75/13fd3d881bbbd55c5cab9ebeea0fdf7b91e9bb9c7d7af8563cd95d51fb060a19"
 }
 ```
 
