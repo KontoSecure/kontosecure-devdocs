@@ -57,7 +57,10 @@ curl -XPOST "https:/api.konto-secure.de/orders" \
   -d "amount=5.99" \
   -d "clientEmail=client@example.com" \
   -d "description=Bestellung Nummer 55837462" \
-  -d "shippingFee=4.99"
+  -d "shippingFee=4.99" \
+  -d "successUrl=<url>" \
+  -d "failedUrl=<url>" \
+  -d "webhookUrl=<url>"
 ```
 
 ```php
@@ -67,6 +70,12 @@ $order = new Order();
 $order->setAmount(10.00);
 $order->setClientEmail('client@example.com');
 $order->setDescription('Bestellung Nummer 55837462');
+
+// Optional parameters
+$order->setShippingFee(4.99);
+$order->setSuccessUrl('<url>');
+$order->setFailedUrl('<url>');
+$order->setWebhookUrl('<url>');
 
 $response = $client->createOrder($order);
 ```
@@ -82,6 +91,9 @@ $response = $client->createOrder($order);
 ```
 
 Dieser Endpunkt erstellt eine neue Order.
+Wenn Sie die optionalen Parameter für die Redirect- bzw. die Webhook-URL definieren,
+so überschreiben diese Werte die URLs, die Sie im Merchant Backoffice unter "Integration"
+definiert haben.
 
 ### HTTP Request
 
@@ -92,9 +104,12 @@ Dieser Endpunkt erstellt eine neue Order.
 Parameter | Beispiel | Beschreibung | Pflichtfeld
 --------- | -------- | ------------ | ------------
 amount | 10.00 | Der Betrag den Sie erhalten möchten. | Ja
-shippingFee | 4.95 | Die Versandkosten. | Nein
 clientEmail | shopper@example.com | Die Email Adresse des Käufers | Ja
 description | Bestellung Nr. 927462 | Der Verwendungszweck auf der Überweisung | Ja
+shippingFee | 4.95 | Die Versandkosten. | Nein
+successUrl | https://www.example.com/success | Redirect nach erfolgreicher Transaktion | Nein
+failedUrl | https://www.example.com/failed | Redirect nach fehlgeschlagener Transaktion | Nein
+webhookUrl | https://www.example.com/kontosecure/webhook | Endpunkt empfängt Transaktionsdetails via POST Request | Nein
 
 <aside class="success">
 Der Gesamtbetrag der Überweisung ergibt sich aus amount + shippingFee
