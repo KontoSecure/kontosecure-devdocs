@@ -57,7 +57,11 @@ curl -XPOST "https:/api.konto-secure.de/orders" \
   -d "shippingFee=4.99" \
   -d "successUrl=<url>" \
   -d "failedUrl=<url>" \
-  -d "webhookUrl=<url>"
+  -d "canceledUrl=<url>" \
+  -d "webhookUrl=<url>" \
+  -d "validUntil=<yyyy-mm-dd hh:ii:ss>" \
+  -d "customFields[my_field_name_1]=my_field_value_1" \
+  -d "customFields[my_field_name_2]=my_field_value_2"
 ```
 
 ```php
@@ -70,9 +74,13 @@ $order->setDescription('Bestellung Nummer 55837462');
 
 // Optional parameters
 $order->setShippingFee(4.99);
-$order->setSuccessUrl('<url>');
-$order->setFailedUrl('<url>');
-$order->setWebhookUrl('<url>');
+$order->setSuccessUrl('https://www.example.com/success');
+$order->setFailedUrl('https://www.example.com/failed');
+$order->setCanceledUrl('https://www.example.com/canceled');
+$order->setWebhookUrl('https://www.example.com/webhook');
+$order->setValidUntil($dateTimeObject);
+$order->addCustomField('my_field_name_1', 'my_field_value_1');
+$order->addCustomField('my_field_name_2', 'my_field_value_2');
 
 $response = $client->createOrder($order);
 ```
@@ -83,7 +91,8 @@ $response = $client->createOrder($order);
 {
   "order_id": "84I00-40K7E-65E6S-DXJ75",
   "security_token": "e4R75Wv8",
-  "checkout_url": "https://www.konto-secure.de/checkout/84I00-40K7E-65E6S-DXJ75/13fd3d881bbbd55c5cab9ebeea0fdf7b91e9bb9c7d7af8563cd95d51fb060a19"
+  "checkout_url": "https://www.konto-secure.de/checkout/84I00-40K7E-65E6S-DXJ75/13fd3d881bbbd55c5cab9ebeea0fdf7b91e9bb9c7d7af8563cd95d51fb060a19",
+  "valid_until": "2017-05-25 12:44:17"
 }
 ```
 
@@ -91,6 +100,8 @@ Dieser Endpunkt erstellt eine neue Order.
 Wenn Sie die optionalen Parameter für die Redirect- bzw. die Webhook-URL definieren,
 so überschreiben diese Werte die URLs, die Sie im Merchant Backoffice unter "Integration"
 definiert haben.
+
+Erstellte Orders sind grundsätzlich nur 10 Minuten gültig. Sollten Sie einen kürzeren oder längeren Validity-Zeitraum benötigen, so können Sie das mit dem Parameter "validUntil" steuern.
 
 ### HTTP Request
 
@@ -106,7 +117,10 @@ description | Bestellung Nr. 927462 | Der Verwendungszweck auf der Überweisung 
 shippingFee | 4.95 | Die Versandkosten. | Nein
 successUrl | https://www.example.com/success | Redirect nach erfolgreicher Transaktion | Nein
 failedUrl | https://www.example.com/failed | Redirect nach fehlgeschlagener Transaktion | Nein
+canceledUrl | https://www.example.com/canceled | Redirect nach vom User abgebrochener Transaktion | Nein
 webhookUrl | https://www.example.com/kontosecure/webhook | Endpunkt empfängt Transaktionsdetails via POST Request | Nein
+validUntil | 2020-05-01 12:00:00 | Die erstellte Order ist bis zu diesem Zeitpunkt gültig | Nein
+customFields[] | [my_internal_reference] = intref_123 | Eigene Felder | Nein 
 
 <aside class="success">
 Der Gesamtbetrag der Überweisung ergibt sich aus amount + shippingFee
